@@ -1,6 +1,6 @@
 #Assignment submitted by Ahalya Mandana and Suhail Pallath Sulaiman'
 from copy import deepcopy
-
+import time as sysTime
 
 class Node:
   def __init__(self):
@@ -9,7 +9,7 @@ class Node:
     self.status='idle'
     self.neighbours=[]
     self.parent=None
-    self.children=[]#For BFS
+    self.children=[]
     self.point=10
 
 
@@ -100,87 +100,11 @@ def moveDisc(n):
 def printPath(node):
     print 'Tracing back the Path'
     while True:
-        print 'Node number: ', node.nodeNumber,'  State:  ', node.state
+        print 'Numero node: ', node.nodeNumber,'  Estado:  ', node.state
         if node.parent!=None:
             node=node.parent
         else:
             break
-
-
-
-def dfs(node):
-    global targetFound
-    global nodenumber
-    if targetFound==False:
-        node.status='ongoing'
-        parent=deepcopy(node)
-        node=moveDisc(node)
-
-        if node!=None:
-            nodenumber+=1
-            node.nodeNumber=nodenumber
-            node.parent=parent
-            print 'Node ',node.nodeNumber, node.state,'\n'
-            if node.state==finalState:
-                print 'Final target reached'
-                printPath(node)
-                targetFound=True
-
-            dfs(node)
-        else:
-            #print 'node is None'
-            parent.status='done'
-            node=parent.parent
-            print 'moving back to Node',node.nodeNumber,'State',node.state
-            dfs(node)
-    else:
-        #print 'Target found'
-        return False
-
-
-
-
-
-def BFS(node):
-    global parentList,nodenumber,childList,targetFound,step
-
-    print '\n STEP : ',step
-    step+=1
-    for node in parentList:
-        if targetFound==False :
-            print 'Parent Node:',node.nodeNumber,' State :',node.state
-            exhausted=False
-            parent=deepcopy(node)
-
-            i=1
-            while exhausted==False :
-
-                i+=1
-                childnode=moveDisc(node)
-
-                if childnode!=None:
-                    nodenumber+=1
-                    childnode.nodeNumber=nodenumber
-                    childnode.parent=node
-                    parent.children.append(childnode)
-                    childList.append(childnode)
-                    print '     Child Node:',childnode.nodeNumber,'State:', childnode.state
-                    #print 'states', states
-                    if childnode.state==finalState:
-                        print 'Final target reached'
-                        printPath(childnode)
-                        targetFound=True
-
-
-                else:
-                    exhausted=True
-    parentList=deepcopy(childList)
-    childList=[]
-    if targetFound==False :
-        BFS(parentList)
-
-
-
 
 
 def bestFS():
@@ -198,8 +122,12 @@ def bestFS():
 
 
     for node in parentList:
+
+        #To get the time from system
+        start_time = sysTime.clock()
+
         if targetFound==False and node.point==leastPoint:
-            print 'Parent Node:',node.nodeNumber,' State :',node.state, 'Cost = ', node.point
+            print 'Node Pai:',node.nodeNumber,' Estado :',node.state, 'Custo = ', node.point
             exhausted=False
             parent=deepcopy(node)
 
@@ -215,10 +143,11 @@ def bestFS():
                     childnode.parent=node
                     parent.children.append(childnode)
                     childList.append(childnode)
-                    print '     Child Node:',childnode.nodeNumber,'State:', childnode.state
+                    print '     Node Filho:',childnode.nodeNumber,'Estado:', childnode.state
                     #print 'states', states
                     if childnode.state==finalState:
-                        print 'Final target reached'
+                        print 'Objetivo final encontrado'
+                        print '--- %s segundos ---' % (sysTime.clock() - start_time)
                         printPath(childnode)
                         targetFound=True
 
@@ -236,7 +165,7 @@ def readState():
     global noOfPegs
     state=[]
     for x in xrange(0,noOfPegs):
-        print 'Discs in Peg',x+1,' : ',
+        print 'Discos na Haste',x+1,' : ',
         a = [int(x) for x in raw_input().split()]
         state.append(a)
 
@@ -247,32 +176,30 @@ shouldContinue=True
 while shouldContinue:
     print '\n\nAssignment submitted by Ahalya Mandana and Suhail Pallath Sulaiman'
 
-    print '\n1. Depth First Search'
-    print '2. Breadth First Search'
-    print '3. Best First Search'
-    print '4. Exit'
+    print '\n1. Best First Search'
+    print '2. Sair'
 
 
-    algoNumber = raw_input("Please select the search algorithm --> ")
+    algoNumber = raw_input("Escolha o algoritmo de busca --> ")
 
 
-    if algoNumber=='4':
-        print '\nExiting'
+    if algoNumber=='2':
+        print '\nSaindo'
         quit()
 
-    print '\nInstructions for input:'
-    print '-->An example input for discs in a peg >>> 3 2 1'
-    print '-->This means your peg have 3 discs with disc of size 3 at bottom and disc of size 1 at top'
-    print '-->If the peg is empty, just click ENTER; Do not input anything in that case'
-    noOfPegs =int(raw_input("\nEnter number of pegs--> "))
+    print '\nInstrucoes para o Input:'
+    print '-->Um exemplo de input para discos em uma Haste >>> 3 2 1'
+    print '-->Isso significa que sua Haste tem 3 discos com um disco de tamanho 3 embaixo and um disco de tamanho 1 no topo'
+    print '-->Se a Haste esta vazia, apenas aperte ENTER; Nao coloque nada nesse caso'
+    noOfPegs =int(raw_input("\nDigite o numero de Hastes--> "))
 
-    print '\nEnter details for initial State'
+    print '\nDigite os detalhes do Estado Inicial'
     initialState=readState()
-    print '\nEnter details for final State'
+    print '\nDigite os detalhes do Estado Final'
     finalState=readState()
 
-    print '\nInitial state : ',initialState
-    print 'Final states  : ',finalState
+    print '\nEstado Inicial : ',initialState
+    print 'Estado Final  : ',finalState
 
     # initialState=[[1],[3],[2]]
     # finalState=[[3,1],[2],[]]
@@ -302,24 +229,14 @@ while shouldContinue:
 
 
 
-
     if algoNumber=='1':
-        print '\nYou selected Depth First Search'
-        print 'Node ',node.nodeNumber, node.state,'\n'#only for DFS
-        dfs(node)
-
-    elif algoNumber=='2':
-        print '\nYou selected Breadth First Search'
-        BFS(node)
-
-    elif algoNumber=='3':
-        print '\nYou selected Best First Search'
+        print '\nVoce selecionou Best First Search'
         bestFS()
 
-    elif algoNumber=='4':
-        print '\nExiting'
+    elif algoNumber=='2':
+        print '\nSaindo'
         quit()
 
     else:
-        print 'Please select a valid option'
+        print 'Por favor selecione uma opcao valida'
         continue
