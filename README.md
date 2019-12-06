@@ -4,6 +4,6 @@
 
 ## 1 - Differences between files
 
-O arquivo AllOne_Hanoi_Tower.py traz o algoritmo Best-First-Search para solução do problema. 
+The file AllOne_Hanoi_Tower.py has the solution for the Hanoi Tower problem using Best-First-Search algorithmn. 
 
 ##
